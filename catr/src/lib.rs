@@ -5,6 +5,13 @@ use std::io::{self, BufRead, BufReader};
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
 
+#[derive(Debug)]
+pub struct Config {
+    files: Vec<String>,
+    number_lines: bool,
+    number_nonblank_lines: bool,
+}
+
 pub fn run(config: Config) -> MyResult<()> {
     for filename in config.files {
         match open(&filename) {
@@ -14,12 +21,13 @@ pub fn run(config: Config) -> MyResult<()> {
                 for line in file.lines() {
                     let line = line?;
                     if config.number_lines {
-                        println!("{:6} {}", line_number, line);
+                        println!("{:6}\t{}", line_number, line);
                     } else if config.number_nonblank_lines {
                         if !line.is_empty() {
-                            println!("{:6} {}", line_number, line);
+                            println!("{:6}\t{}", line_number, line);
                         } else {
                             println!("{}", line);
+                            continue;
                         }
                     } else {
                         println!("{}", line);
@@ -39,13 +47,6 @@ fn open(filename: &str) -> MyResult<Box<dyn BufRead>> {
     }
 }
 
-#[derive(Debug)]
-pub struct Config {
-    files: Vec<String>,
-    number_lines: bool,
-    number_nonblank_lines: bool,
-}
-
 pub fn get_args() -> MyResult<Config> {
     let matches = App::new("catr")
         .version("0.1.0")
@@ -61,12 +62,15 @@ pub fn get_args() -> MyResult<Config> {
         .arg(
             Arg::with_name("number_lines")
                 .short("n")
+                .long("number")
                 .help("Number lines")
-                .takes_value(false),
+                .takes_value(false)
+                .conflicts_with("number_nonblank"),
         )
         .arg(
             Arg::with_name("number_nonblank_lines")
                 .short("b")
+                .long("number-nonblank")
                 .help("Number nonblank lines")
                 .takes_value(false),
         )
