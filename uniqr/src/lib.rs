@@ -17,7 +17,7 @@ pub struct Config {
 pub fn get_args() -> MyResult<Config> {
     let matches = App::new("uniqr")
         .version("0.1.0")
-        .author("Ken Youens-Clark <kyclark@gmail.com>")
+        .author("Haoyang Li <thirtiseven@hotmail.com>")
         .about("Rust uniq")
         .arg(
             Arg::with_name("in_file")
