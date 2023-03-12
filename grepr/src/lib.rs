@@ -186,8 +186,7 @@ fn find_lines<T: BufRead>(
 
 #[cfg(test)]
 mod test {
-    use super::{find_files, find_lines};
-    use rand::{distributions::Alphanumeric, Rng};
+    use super::{find_lines};
     use regex::{Regex, RegexBuilder};
     use std::io::Cursor;
     #[test]
